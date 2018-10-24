@@ -13,8 +13,74 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var auth = require('./routes/auth');
 
 var app = express();
+
+// passport
+var {User} = require('./models');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+
+passport.use(
+  new Strategy(function(username, password, cb) { 
+    User.forge({ username: username })
+    .fetch()
+    .then(user => {
+      // slow because bcrypt is slow..
+      return user && user.authenticate(password)
+    })
+    .then(user => {
+      cb(null, user.toJSON())
+    })
+    .catch(() => { 
+      cb(null, false)
+    })
+  })
+);
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  User.forge({ username: username })
+    .fetch()
+    .then(user => {
+      cb(null, user)
+    })
+    .catch(() => {
+      cb(null, false)
+    })
+});
+
+const passportJWT = require("passport-jwt");
+
+const ExtractJWT = passportJWT.ExtractJwt;
+
+const JWTStrategy   = passportJWT.Strategy;
+
+passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey   : process.env.SECRET_KEY
+    },
+    (jwtPayload, cb) => {
+
+      User.forge({ username: jwtPayload })
+        .fetch()
+        .then(user => {
+          if (!user) {
+            return cb(null, false)
+          } else {
+            return cb(null, user)
+          }
+        })
+        .catch(err => {
+          return cb(null, false);
+        });
+
+    }
+));
 
 app.set('view engine', 'html');
 // view engine setup
@@ -28,6 +94,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/auth', auth);
 app.use('/', index);
 
 // catch 404 and forward to error handler
