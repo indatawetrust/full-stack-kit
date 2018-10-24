@@ -14,5 +14,5 @@ _habitat.render({
 
 if (module.hot) {
   require('preact/devtools'); // enables React DevTools, be careful on IE
-  module.hot.accept('./components/hello-world', () => requestAnimationFrame(init));
+  module.hot.accept('./components/app', () => requestAnimationFrame(init));
 }
