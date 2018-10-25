@@ -5,6 +5,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const {User} = require('../models')
+const authPassportJWT = require('../middlewares/authPassportJWT')
 
 router.post('/login', function(req, res) {
 
@@ -23,8 +24,11 @@ router.post('/login', function(req, res) {
       }
 
       const token = jwt.sign(user.username, process.env.SECRET_KEY);
-      
-      return res.json({token});
+
+      return res.json({
+        ok: true,
+        token
+      });
     });
   })(req, res);
 
@@ -33,11 +37,11 @@ router.post('/login', function(req, res) {
 router.post('/register', function(req, res) {
 
   const {username, password} = req.body
-  
+
   User.forge({ username: username })
     .fetch()
     .then(function (user) {
-       
+
       if (!user) {
         user = new User({ username: username, password: password })
 
@@ -56,12 +60,20 @@ router.post('/register', function(req, res) {
 
     })
     .catch((err) => {
-      
+
       res.status(400).json({
         ok: err
       })
 
     })
+
+});
+
+router.get('/control', authPassportJWT, function (req, res, next) {
+
+  res.json({
+    ok: true
+  })
 
 });
 

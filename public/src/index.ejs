@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
@@ -21,9 +20,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <script src="./assets/js/require.min.js"></script>
     <script>
-      requirejs.config({
-        baseUrl: '.'
-      });
+    requirejs.config({
+      baseUrl: '.',
+    });
     </script>
     <!-- Dashboard Core -->
     <link href="./assets/css/dashboard.css" rel="stylesheet" />
@@ -37,45 +36,7 @@
     <!-- Input Mask Plugin -->
     <script src="./assets/plugins/input-mask/plugin.js"></script>
   </head>
-  <body class="">
-    <div class="page">
-      <div class="page-main">
-        <div class="header py-4">
-          <div class="container">
-            <div class="d-flex">
-              <a class="header-brand" href="./index.html">
-                FullStackKit
-              </a>
-              <div class="d-flex order-lg-2 ml-auto">
-
-              </div>
-              <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#headerMenuCollapse">
-                <span class="header-toggler-icon"></span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
-          <div class="container">
-
-          </div>
-        </div>
-        <div class="my-3 my-md-5">
-          <div class="container">
-            <div data-widget-host="habitat" class="preview">
-              <script type="text/props">
-                { "color": "#0df" }
-              </script>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer class="footer">
-        <div class="container">
-          2018
-        </div>
-      </footer>
-    </div>
+  <body class="" data-widget-host="habitat">
     <script src="<%= bundleURL %>/bundle.js"></script>
   </body>
 </html>

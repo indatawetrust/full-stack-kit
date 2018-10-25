@@ -10,13 +10,15 @@ import actionObjects from './actions'
 
 let store = createStore(storeObjects);
 
-let actions = store => (actionObjects)
+let actions = actionObjects(store);
 
 // components
 import Login from './components/Login'
 import Register from './components/Register'
 import Error from './components/Error'
 import Index from './components/Index'
+import Footer from './components/Footer'
+import Header from './components/Header'
 
 const StoreApp = connect(
   Object.keys(storeObjects).join(','),
@@ -24,6 +26,8 @@ const StoreApp = connect(
 )((props) => (
   <Router
     onChange={async e => {
+
+      props.isAuthenticated()
 
     }}
   >
@@ -35,11 +39,37 @@ const StoreApp = connect(
 ));
 
 export default class App extends Component {
+  constructor() {
+    super()
+
+    store.subscribe(state => {
+
+      if (!state.isLogin) {
+        route('/signin')
+      }
+
+    })
+
+  }
   render(props) {
     return (
-      <Provider store={store}>
-        <StoreApp />
-      </Provider>
+      <div className="page">
+        <div className="page-main">
+          <Header/>
+          <div className="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+            <div className="container">
+            </div>
+          </div>
+          <div className="my-3 my-md-5">
+            <div className="container">
+              <Provider store={store}>
+                <StoreApp />
+              </Provider>
+            </div>
+          </div>
+        </div>
+        <Footer/>
+      </div>
     );
   }
 }
